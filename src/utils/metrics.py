@@ -29,14 +29,24 @@ def calculate_activation_statistics(images, model, batch_size=128, dims=2048, de
         for i in range(0, len(images), batch_size):
             batch = torch.stack(images[i:i + batch_size]).to(device)
             batch = batch.type(torch.FloatTensor).to(device)
-            pred = model(batch)[0]
             
-            # If model output is not flattened, flatten it
-            if pred.shape[2] != 1 or pred.shape[3] != 1:
+            # 调整输入大小为inception的要求
+            if batch.size(-1) != 299:
+                batch = F.interpolate(batch, size=(299, 299), mode='bilinear', align_corners=False)
+            
+            # 获取特征
+            pred = model(batch)
+            
+            # 如果输出是元组，取第一个元素
+            if isinstance(pred, tuple):
+                pred = pred[0]
+            
+            # 平均池化到特征向量
+            if pred.size(2) != 1 or pred.size(3) != 1:
                 pred = adaptive_avg_pool2d(pred, output_size=(1, 1))
-                
-            act[i:i + batch.shape[0]] = pred.cpu().data.numpy().reshape(batch.shape[0], -1)
             
+            act[i:i + batch.shape[0]] = pred.squeeze().cpu().numpy()
+    
     mu = np.mean(act, axis=0)
     sigma = np.cov(act, rowvar=False)
     return mu, sigma
