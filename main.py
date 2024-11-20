@@ -8,6 +8,7 @@ from src.data.dataset import get_cifar10_dataloaders
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--batch_size', type=int, default=128)
+    parser.add_argument('--num_sample', type=int, default=10)
     parser.add_argument('--epochs', type=int, default=100)
     parser.add_argument('--lr', type=float, default=3e-4)
     parser.add_argument('--hidden_dims', type=int, default=256)
@@ -39,7 +40,7 @@ def main():
     train_model(model, train_loader, val_loader, optimizer, device, args)
     
     # Testing
-    test_model(model, test_loader, device)
+    test_model(model, test_loader, device,args)
 
 if __name__ == '__main__':
     main()

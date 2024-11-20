@@ -69,7 +69,7 @@ def validate_one_epoch(model,val_loader,device,epoch,args):
                 recon_images.extend(recon_batch)
                 real_images.extend(data)
     fid_calculator = FIDcalculator(device=device)
-    fid_score = fid_calculator.calculate_fid(real_images, recon_images)
+    fid_score = fid_calculator.calculate_fid(real_images, recon_images,args.num_sample)
     print(f'FID Score: {fid_score:.2f}')
     avg_recon_loss = total_recon_loss / len(val_loader)
     avg_commit_loss = total_commit_loss / len(val_loader)

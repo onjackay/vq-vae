@@ -5,7 +5,7 @@ import os
 from tqdm import tqdm
 from .utils.metrics import FIDcalculator
 
-def test_model(model, test_loader, device):
+def test_model(model, test_loader, device,args):
     """Evaluate the VQ-VAE model and calculate FID score."""
     model.eval()
     test_loss = 0
@@ -56,7 +56,7 @@ def test_model(model, test_loader, device):
     
     # 计算FID分数
     fid_calculator = FIDcalculator(device)
-    fid_score = fid_calculator.calculate_fid(real_images, recon_images)
+    fid_score = fid_calculator.calculate_fid(real_images, recon_images,args.num_sample)
     
     # 打印结果
     print(f'====> Test set loss: {avg_test_loss:.4f}')
