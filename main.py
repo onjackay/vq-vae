@@ -21,7 +21,7 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     # Data
-    train_loader, test_loader = get_cifar10_dataloaders(args.batch_size)
+    train_loader, val_loader, test_loader = get_cifar10_dataloaders(args.batch_size)
     
     # Model
     model = VQVAE(
@@ -36,7 +36,7 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     
     # Training
-    train_model(model, train_loader, optimizer, device, args)
+    train_model(model, train_loader, val_loader, optimizer, device, args)
     
     # Testing
     test_model(model, test_loader, device)
